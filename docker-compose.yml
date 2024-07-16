@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  web:
+    image: node:18-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - frontend
+      - backend
+
+  api:
+    image: node:14-alpine
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./app:/app
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend: 
+
+
+
+#Docker-Compose --> Utilized to run and integrate modules between various containers; applies to volumes for specific shared instances
+
+#  version: 'n'
+#Specifies the version of the Docker Compose file format being used. Different versions support different features/syntax
+
+#services:
+#Defines the services that make up your application. In this example, there are two services: web and api (the multi-container components)
+
+#web:
+#Service Definition: Describes a service named web.
+#Image: Uses the node:18-alpine as the base image
+#Ports: Maps port 8080 (local) on the host to port 80 on the container ("8080:80"), making the Node web server avaliable on localhost:8080 from the container (80).
+#Volumes: Mounts ./nginx.conf from the host into /etc/nginx/nginx.conf in the container (./nginx.conf:/etc/nginx/nginx.conf:ro), ensuring Nginx uses a custom configuration file.
+#Networks: Attaches the web service to two networks: frontend and backend, allowing communication with other services on these networks.
+
+#api:
+#Service Definition: Describes a service named api.
+#Image: Uses the node:14-alpine image, which provides Node.js version 14 on Alpine Linux.
+#Environment Variables: Sets NODE_ENV environment variable to production for the Node.js application.
+#Volumes: Mounts ./app directory from the host into /app in the container, facilitating development by allowing live code updates.
+#Networks: Attaches the api service only to the backend network, ensuring it can communicate with other backend services (defines usage and specificity)
+
+#networks:
+#defines the networks themselves
